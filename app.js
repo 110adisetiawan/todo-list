@@ -89,6 +89,7 @@ function init() {
 
   // ---------- Login / logout ----------
   $("loginBtn").addEventListener("click", async () => {
+    pendingLoginMessage = "";
     $("loginMsg").hidden = true;
     $("loginBtn").disabled = true;
     try {
@@ -108,19 +109,24 @@ function init() {
 
   let unsubTodos = null;
   let unsubNotes = null;
+  // Pesan ini disimpan karena signOut() memicu callback kedua (user = null)
+  // yang sebelumnya menghapus pesan sebelum sempat terbaca.
+  let pendingLoginMessage = "";
 
   onAuthStateChanged(auth, (user) => {
     if (user && isAllowed(user)) {
+      pendingLoginMessage = "";
       showApp(user);
       startListeners();
+    } else if (user) {
+      stopListeners();
+      pendingLoginMessage = `Akun ${user.email} tidak punya akses ke aplikasi ini. Masuk dengan akun yang diizinkan.`;
+      showLogin(pendingLoginMessage);
+      showError("Akses ditolak: " + user.email);
+      signOut(auth);
     } else {
       stopListeners();
-      if (user) {
-        showLogin(`Akun ${user.email} tidak punya akses ke aplikasi ini.`);
-        signOut(auth);
-      } else {
-        showLogin();
-      }
+      showLogin(pendingLoginMessage);
     }
   });
 
@@ -149,10 +155,53 @@ function init() {
   let todoFilter = "all";
   let editingTodo = null;
 
+  function buildTodoItem(t, today) {
+    const late = !t.done && t.tanggal && t.tanggal < today;
+    const li = document.createElement("li");
+    li.className = "item" + (t.done ? " done" : "") + (late ? " overdue" : "");
+
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = !!t.done;
+    cb.setAttribute("aria-label", "Tandai selesai: " + t.title);
+    cb.addEventListener("change", () => run(() => updateDoc(doc(db, "todos", t.id), { done: cb.checked })));
+
+    const body = document.createElement("div");
+    body.className = "body";
+    const title = document.createElement("div");
+    title.className = "title";
+    title.textContent = t.title;
+    body.append(title);
+
+    const actions = document.createElement("div");
+    actions.className = "item-actions";
+    const edit = document.createElement("button");
+    edit.className = "btn-text"; edit.textContent = "Ubah";
+    edit.addEventListener("click", () => startEditTodo(t));
+    const del = document.createElement("button");
+    del.className = "btn-text danger"; del.textContent = "Hapus";
+    del.addEventListener("click", () => {
+      if (confirm("Hapus tugas ini?")) run(() => deleteDoc(doc(db, "todos", t.id)));
+    });
+    actions.append(edit, del);
+
+    li.append(cb, body, actions);
+    return li;
+  }
+
+  function tomorrowStr() {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${d.getFullYear()}-${m}-${day}`;
+  }
+
   function renderTodos() {
-    const list = $("todoList");
-    list.innerHTML = "";
+    const container = $("todoList");
+    container.innerHTML = "";
     const today = todayStr();
+    const tomorrow = tomorrowStr();
     const shown = todos.filter((t) =>
       todoFilter === "all" ? true : todoFilter === "done" ? t.done : !t.done);
 
@@ -160,48 +209,55 @@ function init() {
     $("todoCount").textContent = todos.length ? `${remaining} belum selesai dari ${todos.length}` : "";
 
     if (!shown.length) {
-      const li = document.createElement("li");
-      li.className = "empty";
-      li.textContent = todos.length ? "Tidak ada tugas pada filter ini." : "Belum ada tugas. Tambahkan tugas pertama di atas.";
-      list.appendChild(li);
+      const div = document.createElement("div");
+      div.className = "empty";
+      div.textContent = todos.length ? "Tidak ada tugas pada filter ini." : "Belum ada tugas. Tambahkan tugas pertama di atas.";
+      container.appendChild(div);
       return;
     }
 
+    // Kelompokkan per tanggal (data sudah urut naik dari Firestore)
+    const groups = new Map();
     shown.forEach((t) => {
-      const late = !t.done && t.tanggal && t.tanggal < today;
-      const li = document.createElement("li");
-      li.className = "item" + (t.done ? " done" : "") + (late ? " overdue" : "");
+      const key = t.tanggal || "";
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(t);
+    });
 
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.checked = !!t.done;
-      cb.setAttribute("aria-label", "Tandai selesai: " + t.title);
-      cb.addEventListener("change", () => run(() => updateDoc(doc(db, "todos", t.id), { done: cb.checked })));
+    groups.forEach((items, tanggal) => {
+      // Yang belum selesai tampil lebih dulu di dalam satu tanggal
+      items.sort((a, b) => Number(!!a.done) - Number(!!b.done));
 
-      const body = document.createElement("div");
-      body.className = "body";
-      const title = document.createElement("div");
-      title.className = "title";
-      title.textContent = t.title;
-      const date = document.createElement("div");
-      date.className = "date" + (late ? " late" : "");
-      date.textContent = formatDate(t.tanggal) + (late ? " · terlambat" : "");
-      body.append(title, date);
+      const group = document.createElement("section");
+      group.className = "group";
 
-      const actions = document.createElement("div");
-      actions.className = "item-actions";
-      const edit = document.createElement("button");
-      edit.className = "btn-text"; edit.textContent = "Ubah";
-      edit.addEventListener("click", () => startEditTodo(t));
-      const del = document.createElement("button");
-      del.className = "btn-text danger"; del.textContent = "Hapus";
-      del.addEventListener("click", () => {
-        if (confirm("Hapus tugas ini?")) run(() => deleteDoc(doc(db, "todos", t.id)));
-      });
-      actions.append(edit, del);
+      const head = document.createElement("h2");
+      head.className = "group-head";
+      const label = document.createElement("span");
+      label.textContent = formatDate(tanggal);
+      head.appendChild(label);
 
-      li.append(cb, body, actions);
-      list.appendChild(li);
+      const hasOpen = items.some((t) => !t.done);
+      const tagText = tanggal === today ? "Hari ini"
+        : tanggal === tomorrow ? "Besok"
+        : tanggal && tanggal < today && hasOpen ? "Terlambat" : "";
+      if (tagText) {
+        const tag = document.createElement("span");
+        tag.className = "tag " + (tagText === "Terlambat" ? "late" : tagText === "Hari ini" ? "today" : "");
+        tag.textContent = tagText;
+        head.appendChild(tag);
+      }
+      const count = document.createElement("span");
+      count.className = "group-count";
+      count.textContent = items.length + " tugas";
+      head.appendChild(count);
+
+      const ul = document.createElement("ul");
+      ul.className = "list";
+      items.forEach((t) => ul.appendChild(buildTodoItem(t, today)));
+
+      group.append(head, ul);
+      container.appendChild(group);
     });
   }
 
