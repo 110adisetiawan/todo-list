@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tugas & Catatan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== LAYAR LOGIN ===== -->
+<div id="loginScreen" class="login" hidden>
+  <div class="login-card">
+    <h1>Tugas &amp; Catatan</h1>
+    <p>Masuk dengan akun Google untuk membuka to-do list dan catatanmu.</p>
+    <div id="configBanner" class="banner" hidden>
+      Firebase belum dikonfigurasi. Isi <code>firebaseConfig</code> di file <code>firebase-config.js</code> dengan konfigurasi proyek Firebase Anda.
+    </div>
+    <button id="loginBtn" class="btn-google">
+      <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.5l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.5 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7l-7.9-6.1A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+      Masuk dengan Google
+    </button>
+    <p id="loginMsg" class="login-msg" role="alert" hidden></p>
+  </div>
+</div>
+
+<div id="appShell" hidden>
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">Tugas &amp; Catatan</span>
+    <nav class="tabs" aria-label="Navigasi utama">
+      <a class="tab" href="#/tugas" data-route="tugas">To-do list</a>
+      <a class="tab" href="#/catatan" data-route="catatan">Catatan</a>
+    </nav>
+    <div class="nav-user">
+      <span id="userEmail" class="user-email"></span>
+      <button id="logoutBtn" class="btn-nav">Keluar</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ===== HALAMAN TO-DO ===== -->
+  <section id="page-tugas" hidden>
+    <div class="page-head">
+      <h1>To-do list</h1>
+      <span class="count" id="todoCount"></span>
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <div class="field">
+          <label for="todoTitle">Tugas</label>
+          <input type="text" id="todoTitle" placeholder="Contoh: Kirim laporan mingguan" maxlength="200">
+        </div>
+        <div class="field small">
+          <label for="todoDate">Tanggal</label>
+          <input type="date" id="todoDate">
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn-primary" id="todoSave">Tambah tugas</button>
+        <button class="btn-ghost" id="todoCancel" hidden>Batal</button>
+      </div>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filter tugas">
+      <button class="chip" data-filter="all" aria-pressed="true">Semua</button>
+      <button class="chip" data-filter="active" aria-pressed="false">Belum selesai</button>
+      <button class="chip" data-filter="done" aria-pressed="false">Selesai</button>
+    </div>
+
+    <ul class="list" id="todoList"></ul>
+  </section>
+
+  <!-- ===== HALAMAN CATATAN ===== -->
+  <section id="page-catatan" hidden>
+    <div class="page-head">
+      <h1>Catatan</h1>
+      <span class="count" id="noteCount"></span>
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <div class="field">
+          <label for="noteTitle">Judul</label>
+          <input type="text" id="noteTitle" placeholder="Judul catatan" maxlength="150">
+        </div>
+        <div class="field small">
+          <label for="noteDate">Tanggal</label>
+          <input type="date" id="noteDate">
+        </div>
+      </div>
+      <div class="field" style="margin-top:10px">
+        <label for="noteContent">Isi catatan</label>
+        <textarea id="noteContent" placeholder="Tulis catatan di sini"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn-primary" id="noteSave">Simpan catatan</button>
+        <button class="btn-ghost" id="noteCancel" hidden>Batal</button>
+      </div>
+    </div>
+
+    <ul class="list" id="noteList"></ul>
+  </section>
+</main>
+</div>
+
+<div class="toast" id="toast" role="alert" hidden></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
