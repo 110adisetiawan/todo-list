@@ -261,10 +261,10 @@ function init() {
     });
   }
 
-  function resetTodoForm() {
+  function resetTodoForm(keepDate = false) {
     editingTodo = null;
     $("todoTitle").value = "";
-    $("todoDate").value = todayStr();
+    if (!keepDate) $("todoDate").value = todayStr();
     $("todoSave").textContent = "Tambah tugas";
     $("todoCancel").hidden = true;
   }
@@ -291,12 +291,12 @@ function init() {
       } else {
         await addDoc(todosCol, { title, tanggal, done: false, createdAt: serverTimestamp() });
       }
-      resetTodoForm();
+      resetTodoForm(true); // tanggal yang dipilih tetap dipertahankan
     });
     $("todoSave").disabled = false;
   }
   $("todoSave").addEventListener("click", saveTodo);
-  $("todoCancel").addEventListener("click", resetTodoForm);
+  $("todoCancel").addEventListener("click", () => resetTodoForm());
   $("todoTitle").addEventListener("keydown", (e) => { if (e.key === "Enter") saveTodo(); });
 
   document.querySelectorAll(".chip").forEach((chip) => {
@@ -364,11 +364,11 @@ function init() {
     });
   }
 
-  function resetNoteForm() {
+  function resetNoteForm(keepDate = false) {
     editingNote = null;
     $("noteTitle").value = "";
     $("noteContent").value = "";
-    $("noteDate").value = todayStr();
+    if (!keepDate) $("noteDate").value = todayStr();
     $("noteSave").textContent = "Simpan catatan";
     $("noteCancel").hidden = true;
   }
@@ -397,10 +397,10 @@ function init() {
       } else {
         await addDoc(notesCol, { title, content, tanggal, createdAt: serverTimestamp() });
       }
-      resetNoteForm();
+      resetNoteForm(true); // tanggal yang dipilih tetap dipertahankan
     });
     $("noteSave").disabled = false;
   }
   $("noteSave").addEventListener("click", saveNote);
-  $("noteCancel").addEventListener("click", resetNoteForm);
+  $("noteCancel").addEventListener("click", () => resetNoteForm());
 }
