@@ -152,7 +152,7 @@ function init() {
   //  TO-DO
   // ============================================================
   let todos = [];
-  let todoFilter = "all";
+  let todoFilter = "active";
   let editingTodo = null;
 
   function buildTodoItem(t, today) {
