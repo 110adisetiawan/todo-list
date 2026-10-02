@@ -3,831 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Upaznet Helpdesk – SOP & Template Chat</title>
+<title>Tugas & Catatan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --paper: #F3F6FA;
-    --surface: #FFFFFF;
-    --ink: #14306A;
-    --text: #1B2436;
-    --muted: #5B6779;
-    --line: #DAE2EC;
-    --brand: #2F9E44;
-    --brand-dark: #1F7A33;
-    --brand-tint: #E4F4E7;
-    --agent: #DDF0E1;
-    --no: #C62F3A;
-    --no-tint: #FDECEE;
-    --yes-tint: #E8F6EA;
-    --flag: #FFE9A8;
-    --flag-ink: #6B4E00;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0;
-    font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background: var(--paper);
-    color: var(--text);
-    line-height: 1.6;
-  }
-  :focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
-
-  /* ---------- Navbar ---------- */
-  .navbar { position: sticky; top: 0; z-index: 10; background: var(--ink); color: #fff; }
-  .navbar-inner {
-    max-width: 1040px; margin: 0 auto;
-    display: flex; align-items: center; gap: 24px;
-    padding: 0 20px; min-height: 60px;
-  }
-  .brand {
-    display: flex; align-items: center; gap: 10px;
-    font-weight: 800; font-size: 1.1rem; text-decoration: none; color: #fff;
-    margin-right: auto;
-  }
-  .brand-mark { width: 30px; height: 30px; border-radius: 8px; background: var(--brand); display: grid; place-items: center; }
-  .brand-mark svg { width: 18px; height: 18px; }
-  .nav-links { display: flex; gap: 4px; height: 60px; }
-  .nav-links a {
-    display: flex; align-items: center;
-    padding: 0 16px; text-decoration: none;
-    font-weight: 600; font-size: .95rem; color: #B7C4DE;
-    border-bottom: 3px solid transparent;
-  }
-  .nav-links a:hover { color: #fff; }
-  .nav-links a[aria-current="page"] { color: #fff; border-bottom-color: #6FD17F; }
-
-  /* ---------- Layout ---------- */
-  main { max-width: 2160px; margin: 0 auto; padding: 36px 20px 80px; }
-  .page[hidden] { display: none; }
-  .page-head { margin-bottom: 24px; max-width: 62ch; }
-  .page-head h1 { margin: 0 0 6px; font-size: 2rem; line-height: 1.2; font-weight: 800; color: var(--ink); }
-  .page-head p { margin: 0; color: var(--muted); }
-  h2.section-title { margin: 44px 0 6px; font-size: 1.35rem; color: var(--ink); }
-  .section-desc { margin: 0 0 16px; color: var(--muted); max-width: 62ch; }
-
-  .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip {
-    font: inherit; font-size: .9rem; font-weight: 600;
-    padding: 7px 14px; border-radius: 999px; cursor: pointer;
-    border: 1px solid var(--line); background: var(--surface); color: var(--muted);
-  }
-  .chip:hover { border-color: var(--brand); color: var(--brand-dark); }
-  .chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
-  .empty { padding: 28px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: var(--radius); }
-
-  /* ---------- SOP: pamflet ---------- */
-  .pamphlets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
-  .pamphlet {
-    background: var(--surface); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 14px;
-    display: flex; flex-direction: column; gap: 12px;
-  }
-  .pamphlet-img {
-    display: block; width: 100%; padding: 0; border: 0; background: none;
-    cursor: zoom-in; border-radius: 6px; overflow: hidden;
-  }
-  .pamphlet-img img { display: block; width: 100%; height: auto; }
-  .pamphlet h2 { margin: 0; font-size: 1.05rem; color: var(--ink); }
-  .pamphlet p { margin: 2px 0 0; color: var(--muted); font-size: .9rem; }
-  .actions { display: flex; flex-wrap: wrap; gap: 8px; }
-  .btn {
-    font: inherit; font-weight: 700; font-size: .9rem; text-decoration: none;
-    padding: 8px 16px; border-radius: 8px; cursor: pointer;
-    border: 1px solid var(--brand); background: var(--surface); color: var(--brand-dark);
-    display: inline-block;
-  }
-  .btn:hover { background: var(--brand-tint); }
-  .btn.solid { background: var(--brand); color: #fff; }
-  .btn.solid:hover { background: var(--brand-dark); }
-
-  dialog.viewer {
-    border: 0; padding: 0; background: transparent;
-    max-width: 100vw; max-height: 100vh; width: 100vw; height: 100vh;
-  }
-  dialog.viewer::backdrop { background: rgba(10, 18, 36, .88); }
-  .viewer-box { width: 100%; height: 100%; overflow: auto; padding: 56px 16px 24px; display: flex; justify-content: center; }
-  .viewer-box img { width: min(100%, 760px); height: auto; align-self: flex-start; border-radius: 8px; }
-  .viewer-close {
-    position: fixed; top: 12px; right: 12px; z-index: 2;
-    font: inherit; font-weight: 700; padding: 8px 16px; border-radius: 8px; cursor: pointer;
-    border: 0; background: #fff; color: var(--ink);
-  }
-
-  /* ---------- SOP: versi teks (belum dipakai, disimpan kalau nanti dibutuhkan) ---------- */
-  .case-head, .case {
-    display: grid; grid-template-columns: 1.1fr 1fr 1.4fr; gap: 10px;
-  }
-  .case-head { margin-bottom: 8px; font-weight: 700; font-size: .9rem; }
-  .case-head span { padding: 8px 14px; border-radius: 8px; color: #fff; }
-  .case-head .h-case { background: var(--ink); }
-  .case-head .h-no { background: var(--no); }
-  .case-head .h-yes { background: var(--brand); }
-  .case { margin-bottom: 10px; }
-  .case > div { padding: 12px 14px; border-radius: 8px; }
-  .case .c-case { background: #E7EEF9; font-weight: 700; color: var(--ink); }
-  .case .c-no { background: var(--no-tint); }
-  .case .c-yes { background: var(--yes-tint); }
-  .case .tag { display: none; font-weight: 700; font-size: .8rem; margin-bottom: 2px; }
-  .case .c-no .tag { color: var(--no); }
-  .case .c-yes .tag { color: var(--brand-dark); }
-
-  .rules { display: grid; gap: 10px; padding: 0; margin: 0; list-style: none; counter-reset: rule; }
-  .rules li {
-    counter-increment: rule; position: relative;
-    padding: 12px 14px 12px 56px; border-radius: 8px; font-weight: 600;
-    min-height: 52px; display: flex; align-items: center;
-  }
-  .rules li::before {
-    content: counter(rule);
-    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-    width: 28px; height: 28px; border-radius: 50%; color: #fff;
-    display: grid; place-items: center; font-size: .85rem; font-weight: 700;
-  }
-  .rules li.no { background: var(--no-tint); }
-  .rules li.no::before { background: var(--no); }
-  .rules li.yes { background: var(--yes-tint); }
-  .rules li.yes::before { background: var(--brand); }
-
-  /* ---------- Template: tab ---------- */
-  .tabs {
-    display: flex; gap: 4px; margin-bottom: 20px;
-    border-bottom: 1px solid var(--line);
-    overflow-x: auto; scrollbar-width: thin;
-  }
-  .tab {
-    font: inherit; font-weight: 700; font-size: .95rem; white-space: nowrap;
-    padding: 10px 18px; margin-bottom: -1px; cursor: pointer;
-    background: none; border: 0; border-bottom: 3px solid transparent; color: var(--muted);
-  }
-  .tab:hover { color: var(--ink); }
-  .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--brand); }
-  .tabpanel[hidden] { display: none; }
-  .tab-desc { margin: 0 0 16px; color: var(--muted); max-width: 70ch; }
-  /* ---------- Template: kartu ---------- */
-  .tpl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
-  .tpl {
-    background: var(--surface); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 16px;
-    display: flex; flex-direction: column; gap: 12px; min-width: 0;
-  }
-  .tpl-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-  .tpl-title { font-weight: 700; margin: 0; font-size: 1rem; }
-  .tpl-cat { font-size: .8rem; color: var(--muted); white-space: nowrap; }
-  .bubble {
-    background: var(--agent); padding: 12px 14px;
-    border-radius: 14px 14px 14px 4px;
-    font-size: .95rem; white-space: pre-line; flex: 1;
-  }
-  .bubble.letter { border-radius: 6px 14px 14px 14px; background: #E7EEF9; }
-  .ph { background: var(--flag); color: var(--flag-ink); padding: 0 4px; border-radius: 4px; font-weight: 600; }
-  .bubble.clickable { cursor: copy; border: 2px solid transparent; transition: border-color .15s; }
-  .bubble.clickable:hover { border-color: var(--brand); }
-  .bubble.copied { border-color: var(--brand); }
-  .copy-state { font-size: .82rem; font-weight: 600; color: var(--muted); min-height: 1.3em; }
-  .copy-state.done { color: var(--brand-dark); }
-  .embed-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
-  .embed-bar .tab-desc { margin: 0; }
-  .embed-frame {
-    display: block; width: 100%; height: calc(100vh - 160px); min-height: 640px;
-    border: 1px solid var(--line); border-radius: var(--radius); background: #fff;
-  }
-  .custom-panel:empty::before {
-    content: "Tab ini belum diisi.";
-    display: block; padding: 28px; text-align: center; color: var(--muted);
-    border: 1px dashed var(--line); border-radius: var(--radius);
-  }
-  .hint { margin-top: 24px; font-size: .9rem; color: var(--muted); max-width: 70ch; }
-
-  /* ---------- Template Chat: 2 kolom (kiri-kanan) per shift ---------- */
-  .agents { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
-  .agent { min-width: 0; }
-  .agent-bar {
-    position: sticky; top: 68px; z-index: 5;
-    background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--brand);
-    border-radius: var(--radius); padding: 12px 14px; margin-bottom: 14px;
-    box-shadow: 0 8px 10px -8px rgba(20, 48, 106, .35);
-  }
-  .agent:nth-child(2) .agent-bar { border-top-color: var(--ink); }
-  .agent-title { margin: 0 0 8px; font-size: .85rem; font-weight: 800; color: var(--ink); text-transform: uppercase; letter-spacing: .04em; }
-  .agent-fields { display: grid; grid-template-columns: 1fr 120px; gap: 10px; }
-  .field label { display: block; margin-bottom: 2px; font-size: .78rem; font-weight: 700; color: var(--muted); }
-  .field input, .field select {
-    width: 100%; font: inherit; padding: 8px 10px;
-    border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--text);
-  }
-  .field input.invalid { border-color: var(--no); box-shadow: 0 0 0 3px var(--no-tint); }
-  .agent-list { display: grid; gap: 12px; }
-  .copy-state.err { color: var(--no); }
-
-  footer { text-align: center; padding: 24px 20px 40px; color: var(--muted); font-size: .85rem; }
-
-  @media (max-width: 900px) {
-    .agents { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 760px) {
-    .pamphlets { grid-template-columns: 1fr; }
-    .case-head { display: none; }
-    .case { grid-template-columns: 1fr; gap: 6px; padding: 0; margin-bottom: 14px; }
-    .case .tag { display: block; }
-  }
-  @media (max-width: 560px) {
-    .navbar-inner { gap: 8px; padding: 0 12px; }
-    .brand span.name { display: none; }
-    .nav-links a { padding: 0 12px; }
-    .page-head h1 { font-size: 1.6rem; }
-    .tpl-grid { grid-template-columns: 1fr; }
-    .tab { padding: 10px 14px; }
-  }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="navbar">
-  <nav class="navbar-inner" aria-label="Navigasi utama">
-    <a href="#sop" class="brand" aria-label="Upaznet Helpdesk">
-      <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>
-      </span>
-      <span class="name">Upaznet Helpdesk</span>
-    </a>
-    <div class="nav-links">
-      <a href="#sop" data-nav="sop">SOP</a>
-      <a href="#template" data-nav="template">Template Chat</a>
+<!-- ===== LAYAR LOGIN ===== -->
+<div id="loginScreen" class="login" hidden>
+  <div class="login-card">
+    <h1>Tugas &amp; Catatan</h1>
+    <p>Masuk dengan akun Google untuk membuka to-do list dan catatanmu.</p>
+    <div id="configBanner" class="banner" hidden>
+      Firebase belum dikonfigurasi. Isi <code>firebaseConfig</code> di file <code>firebase-config.js</code> dengan konfigurasi proyek Firebase Anda.
     </div>
-  </nav>
+    <button id="loginBtn" class="btn-google">
+      <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.5l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.5 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7l-7.9-6.1A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+      Masuk dengan Google
+    </button>
+    <p id="loginMsg" class="login-msg" role="alert" hidden></p>
+  </div>
+</div>
+
+<div id="appShell" hidden>
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">Tugas &amp; Catatan</span>
+    <nav class="tabs" aria-label="Navigasi utama">
+      <a class="tab" href="#/tugas" data-route="tugas">To-do list</a>
+      <a class="tab" href="#/catatan" data-route="catatan">Catatan</a>
+    </nav>
+    <div class="nav-user">
+      <span id="userEmail" class="user-email"></span>
+      <button id="logoutBtn" class="btn-nav">Keluar</button>
+    </div>
+  </div>
 </header>
 
 <main>
-  <!-- ===== HALAMAN SOP ===== -->
-  <section id="page-sop" class="page" aria-labelledby="h-sop">
+  <!-- ===== HALAMAN TO-DO ===== -->
+  <section id="page-tugas" hidden>
     <div class="page-head">
-      <h1 id="h-sop">SOP Helpdesk</h1>
-      <p>Pegangan tim helpdesk saat melayani pelanggan. Klik pamflet untuk memperbesar.</p>
+      <h1>To-do list</h1>
+      <span class="count" id="todoCount"></span>
     </div>
 
-    <div class="pamphlets">
-      <article class="pamphlet">
-        <button type="button" class="pamphlet-img" data-zoom aria-label="Perbesar pamflet SOP Pelayanan Helpdesk">
-          <img id="img-sop" alt="Pamflet SOP Pelayanan Helpdesk: tabel situasi, hal yang tidak boleh dilakukan, dan yang harus dilakukan" src="img/SOP-Pelayanan-Helpdesk.jpg">
-        </button>
-        <div>
-          <h2>SOP Pelayanan Helpdesk</h2>
-          <p>7 situasi umum saat menangani chat pelanggan, lengkap dengan yang jangan dan yang harus dilakukan.</p>
+    <div class="panel">
+      <div class="row">
+        <div class="field">
+          <label for="todoTitle">Tugas</label>
+          <input type="text" id="todoTitle" placeholder="Contoh: Kirim laporan mingguan" maxlength="200">
         </div>
-      </article>
-
-      <article class="pamphlet">
-        <button type="button" class="pamphlet-img" data-zoom aria-label="Perbesar pamflet Hal yang perlu diketahui tim Helpdesk">
-          <img id="img-info" alt="Pamflet Hal yang perlu diketahui tim Helpdesk: 6 aturan kerja" src="img/ChatGPT Image 30 Sep 2026, 13.12.08.png">
-        </button>
-        <div>
-          <h2>Hal yang perlu diketahui tim Helpdesk</h2>
-          <p>6 aturan kerja harian, mulai dari membalas komplain sampai serah terima shift.</p>
+        <div class="field small">
+          <label for="todoDate">Tanggal</label>
+          <input type="date" id="todoDate">
         </div>
-      </article>
-
-      <article class="pamphlet">
-        <button type="button" class="pamphlet-img" data-zoom aria-label="Perbesar pamflet SOP Pengecekan Media Koneksi">
-          <img id="img-sop-media" alt="Pamflet SOP Pengecekan Media Jaringan Upaznet" src="img/Panduan SOP Pengecekan Media Jaringan Upaznet.png">
-        </button>
-        <div>
-          <h2>SOP Pengecekan Media Koneksi</h2>
-          <p>Hal yang harus dilakukan ketika melakukan pengecekan media koneksi ke user yang komplain lemot.</p>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- ===== HALAMAN TEMPLATE CHAT ===== -->
-  <section id="page-template" class="page" aria-labelledby="h-tpl" hidden>
-    <div class="page-head">
-      <h1 id="h-tpl">Template Chat</h1>
-      <p>Teks siap pakai untuk helpdesk. Pilih tab sesuai kebutuhan, lalu klik teksnya untuk menyalin otomatis. Kalau ada bagian berwarna kuning, ganti dulu sebelum dikirim.</p>
-    </div>
-    <div class="tabs" id="tabs" role="tablist" aria-label="Jenis template"></div>
-    <div id="tab-panels">
-      <!-- Tab Config GPON: menampilkan aplikasi Config Generator Upaznet.
-           Ganti URL di dua tempat (href dan src) kalau alamat aplikasinya berubah. -->
-      <div class="tabpanel" id="panel-gpon" role="tabpanel" aria-labelledby="tab-gpon" hidden>
-        <div class="embed-bar">
-          <p class="tab-desc">Generator script config GPON dan kumpulan command OLT (ZTE).</p>
-          <a class="btn solid" href="https://configurasi-generator-upaznet.vercel.app/" target="_blank" rel="noopener noreferrer">Buka di tab baru ↗</a>
-        </div>
-        <iframe class="embed-frame" title="Config Generator Upaznet"
-                src="https://configurasi-generator-upaznet.vercel.app/"
-                loading="lazy" allow="clipboard-write" referrerpolicy="no-referrer"></iframe>
-        <p class="hint">Kalau tampilan di atas kosong atau tidak muncul, buka aplikasinya lewat tombol "Buka di tab baru".</p>
+      </div>
+      <div class="actions">
+        <button class="btn-primary" id="todoSave">Tambah tugas</button>
+        <button class="btn-ghost" id="todoCancel" hidden>Batal</button>
       </div>
     </div>
+
+    <div class="filters" role="group" aria-label="Filter tugas">
+      <button class="chip" data-filter="all" aria-pressed="false">Semua</button>
+      <button class="chip" data-filter="active" aria-pressed="true">Belum selesai</button>
+      <button class="chip" data-filter="done" aria-pressed="false">Selesai</button>
+    </div>
+
+    <div id="todoList"></div>
+  </section>
+
+  <!-- ===== HALAMAN CATATAN ===== -->
+  <section id="page-catatan" hidden>
+    <div class="page-head">
+      <h1>Catatan</h1>
+      <span class="count" id="noteCount"></span>
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <div class="field">
+          <label for="noteTitle">Judul</label>
+          <input type="text" id="noteTitle" placeholder="Judul catatan" maxlength="150">
+        </div>
+        <div class="field small">
+          <label for="noteDate">Tanggal</label>
+          <input type="date" id="noteDate">
+        </div>
+      </div>
+      <div class="field" style="margin-top:10px">
+        <label for="noteContent">Isi catatan</label>
+        <textarea id="noteContent" placeholder="Tulis catatan di sini"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn-primary" id="noteSave">Simpan catatan</button>
+        <button class="btn-ghost" id="noteCancel" hidden>Batal</button>
+      </div>
+    </div>
+
+    <ul class="list" id="noteList"></ul>
   </section>
 </main>
+</div>
 
-<dialog class="viewer" id="viewer" aria-label="Pamflet diperbesar">
-  <button type="button" class="viewer-close" id="viewer-close">Tutup</button>
-  <div class="viewer-box" id="viewer-box"><img id="viewer-img" alt=""></div>
-</dialog>
+<div class="toast" id="toast" role="alert" hidden></div>
 
-<footer>Upaznet Helpdesk · Untuk penggunaan internal tim</footer>
-
-<script>
-/* =====================================================
-   DATA – edit bagian ini untuk mengubah isi template
-   Bagian dalam tanda [ ] otomatis diberi warna kuning
-   ===================================================== */
-
-// ---- Tab 1: Template Chat
-// Salam pembuka ("Selamat [Shift] Kak, Saya [Nama] dari tim Helpdesk upaznet.") otomatis ditambahkan di depan
-// setiap template, sesuai nama dan shift yang diisi di kolom. Isi "text" cukup tulis setelah salamnya.
-// greet: false = template tidak memakai salam pembuka (pesan lanjutan di tengah chat dan penutup).
-const TEMPLATES = [
-  // --- Umum
-  { title: "Perkenalan", cat: "Umum",
-    text: "" },
-  { title: "Salam", cat: "Umum",
-    text: "Apakah ada yang bisa di bantu ?🙏🏻🙏🏻" },
-  { title: "Tanya ID / atas nama", cat: "Umum",
-    text: "Mohon maaf sebelumnya bisa dibantu id pelanggan atau nama pelanggan yang terdaftar atas nama siapa?🙏🏻🙏🏻" },
-  { title: "Cek", cat: "Umum",
-    text: "Kita bantu croscek dulu ya kak untuk kendalanya 🙏🏻" },
-  { title: "Tanya trouble", cat: "Umum", greet: false,
-    text: "Setelah kami cek untuk saat ini terpantau jaringan normal kak,, apakah koneksi di tempat kakak mengalami kendala ?" },
-  { title: "Ganti password", cat: "Umum",
-    text: "Baik untuk penggantian password wifi bisa kami bantu gantikan,\nSIlahkan untuk menuliskan password wifi terbarunya🙏🏻🙏🏻" },
-
-  // --- Komplain
-  { title: "Komplain lemot", cat: "Komplain",
-    text: "Terkait kendala lemotnya, biasanya terjadi saat akses apa ya, Kak?" },
-  { title: "Komplain dari divisi lain", cat: "Komplain",
-    text: "kami mendapatkan informasi bahwa terdapat kendala pada koneksi wifi tidak bisa digunakan/lemot\n\nuntuk itu kami lakukan pemeriksaan terlebih dahulu terkait kendalanya, mohon kesedianya menunggu 🙏🏻🙏🏻" },
-
-  // --- Pembayaran
-  { title: "Isolir", cat: "Pembayaran",
-    text: "Mohon maaf,setelah kami periksa saat ini status koneksi tersuspend,sebelumnya apakah sudah melakukan pembayaran tagihan internetnya?🙏🏻🙏🏻" },
-  { title: "Terima pembayaran", cat: "Pembayaran",
-    text: "Terimakasih telah melakukan pembayaran, Bukti pembayaran sudah kami terima dan saat ini sedang kami proses. 🙏🏻\n\nSaat ini layanan internet Anda sudah aktif kembali. Silakan dicoba dan semoga dapat digunakan dengan lancar. 🙏🏻" },
-
-  // --- Gangguan (sisi pelanggan)
-  { title: "Antena tidak konek", cat: "Gangguan",
-    text: "Mohon maaf setelah kami cek terpantau antena tidak terhubung dengan pemancar kami,\nuntuk hal tersebut segera kami jadwalkan untuk di lakukan kunjungan oleh tim teknisi kami ke lokasi,🙏🏻🙏🏻" },
-  { title: "Router tidak konek", cat: "Gangguan",
-    text: "Mohon maaf setelah kami periksa saat ini router tidak terkoneksi dengan jaringan kami, Mohon dibantu untuk melepas adaptor selama 2 menit lalu di pasang kembali🙏🏻🙏🏻" },
-  { title: "Sinyal jelek", cat: "Gangguan",
-    text: "Mohon maaf setelah kami periksa Terpantau sinyal kurang stabil, terkait hal tersebut saya jadwalkan agar di cek oleh tim teknis kami ke lokasi, Mohon di tunggu.terimakasih 🙏🏻🙏🏻" },
-  { title: "Stuck", cat: "Gangguan",
-    text: "Mohon maaf setelah kami periksa saat ini router/modem mengalami stuck, Mohon dibantu untuk melepas adaptor selama 2 menit lalu di pasang kembali🙏🏻🙏🏻" },
-  { title: "Interferensi lokal", cat: "Gangguan",
-    text: "Setelah kami lakukan pemeriksaan, kendala tersebut disebabkan oleh adanya interferensi sinyal WiFi, yang terjadi karena banyaknya perangkat atau jaringan lain di sekitar yang menggunakan frekuensi yang sama.\n\nUntuk hasil yang lebih optimal, kami sarankan penggunaan jaringan WiFi 5 GHz agar koneksi internet yang diperoleh lebih stabil dan maksimal. 🙏🏻" },
-  { title: "Loss", cat: "Gangguan",
-    text: "Mohon maaf setelah kami periksa,terdapat indikasi kabel putus,untuk hal tersebut segera kami jadwalkan untuk di lakukan perbaikan oleh tim teknisi ke lokasi,🙏🏻🙏🏻" },
-  { title: "Redaman tinggi", cat: "Gangguan",
-    text: "Mohon maaf setelah kami periksa gangguan internet tidak stabil diakibatkan indikasi kendala pada jalur kabelnya,\n\nuntuk itu akan segera di lakukan perbaikan oleh tim teknisi ke lokasi,🙏🏻🙏🏻" },
-  { title: "Dying gasp", cat: "Gangguan",
-    text: "Mohon maaf setelah kami lakukan pemeriksaan terdapat indikasi kendala pada perangkat modem,\nMohon dibantu untuk melepas adaptor selama 2 menit lalu di pasang kembali 🙏🏻🙏🏻" },
-  { title: "Traffic penuh", cat: "Gangguan",
-    text: "Mohon maaf,setelah kami lakukan pemeriksaan,untuk kendala lemot diakibatkan saat ini penggunaan sudah melewati batas maksimal atau over penggunaan,📉\n\nSilahkan untuk melakukan penggantian kata sandi terlebih dahulu untuk mengurangi jumlah pengguna nya🙏🏻🙏🏻" },
-
-  // --- Jaringan (sisi pemancar / jalur kabel)
-  { title: "Pemadaman listrik pemancar", cat: "Gangguan",
-    text: "Mohon maaf atas ketidaknyamanannya, kami infomasikan saat ini jaringan terkendala dikarenakan sedang ada pemadaman listrik dari pihak PLN di pemancar kami.\n\nmohon ditunggu hingga listrik sudah normal kembali,Demikian informasi kami sampaikan, terima kasih.🙏🏻🙏🏻" },
-  { title: "Backbone / ODP / ODC", cat: "Jaringan",
-    text: "Mohon maaf terkait kendala yang di alami terpantau saat ini sedang ada perbaikan di sisi jalur kabel kami.\n\nTerkait hal tersebut akan kami infokan kembali jika sudah selesai perbaikan dan koneksi sudah normal kembali,Terimakasih 🙏🏻🙏🏻" },
-  { title: "BTS / Repeater down", cat: "Jaringan",
-    text: "Mohon maaf Terkait kendala yang di alami terpantau saat ini sedang ada gangguan di sisi Pemancar kami,\n\nsaat ini kami dan tim masih melakukan upaya untuk melakukan perbaikan secepat mungkin,🙏🙏" },
-  { title: "Tanya pemadaman listrik", cat: "Jaringan",
-    text: "Mohon maaf mengganggu waktunya, kami mau menanyakan apa sedang ada pemadaman listrik?" },
-
-  // --- Konfirmasi (pesan lanjutan di tengah chat, tanpa salam pembuka)
-  { title: "Konfirmasi sebelum reboot", cat: "Konfirmasi", greet: false,
-    text: "baik kak setelah kami periksa saat ini indikasi jaringan stuck ya kak,\nmaka dari itu kami lakukan reboot modemnya dahulu, internet akan off 3-5 menit ya kak\nmohon di tunggu" },
-  { title: "Konfirmasi setelah reboot", cat: "Konfirmasi", greet: false,
-    text: "kami cek untuk saat ini perangkat sudah terhubung ke jaringan kembali kak, silahkan di coba kembali untuk koneksinya 🙏🏻" },
-  { title: "Interferensi (sudah ganti channel)", cat: "Konfirmasi", greet: false,
-    text: "Baik kak, kami sudah melakukan penggantian channel/frekuensi di perangkatnya.\nUntuk saat ini apakah masih kendala kak koneksinya?" },
-  { title: "Rekomendasi ke 5G", cat: "Konfirmasi", greet: false,
-    text: "Baik, Kak. Setelah kami cek, perangkat Kakak sudah mendukung WiFi 5G. Kami sarankan untuk terhubung ke WiFi 5G karena kecepatannya lebih tinggi dan koneksinya lebih optimal.\n\nNamun, WiFi 5G memiliki jangkauan yang lebih pendek dibandingkan 2.4G dan lebih mudah terpengaruh oleh tembok atau penghalang. Jadi, sebaiknya digunakan di dekat modem atau di ruangan yang tidak banyak penghalang ya, Kak. 🙏🏻" },
-
-  // --- Penutup (tanpa salam pembuka)
-  { title: "Penutup gangguan selesai", cat: "Penutup", greet: false,
-    text: "Apabila tidak ada hal lain yang dapat kami bantu, percakapan ini kami akhiri\nselamat beraktifitas kembali😊😊" },
-  { title: "Penutup tidak ada respon", cat: "Penutup", greet: false,
-    text: "Baik kak karena tidak ada respon, kami anggap untuk kendalanya sudah tertangani ya kak\n\nkami ijin untuk menutup sesi chat komplain ini🙏🙏\n\nselamat beraktifitas kembali😊😊" }
-];
-
-// ---- Tab 2: Broadcast Gangguan
-// Judul berakhiran "Story WA" = untuk status WhatsApp, "Broadcast" = dikirim ke pelanggan.
-const BROADCAST = [
-  // --- Upstream
-  { title: "Gangguan upstream - Story WA", cat: "Upstream",
-    text: "📢 INFO GANGGUAN LAYANAN UPAZNET\n\nKami informasikan bahwa Saat ini sedang terjadi gangguan pada Main Link yang menyebabkan kendala pada layanan internet.\n\n🛠️ Kami  dan tim sedang melakukan penanganan secara intensif agar layanan dapat kembali normal secepat mungkin.\n\n🙏 Kami mohon maaf atas ketidaknyamanan yang ditimbulkan. Informasi terbaru akan kami sampaikan kembali setelah proses penanganan selesai dan kondisi jaringan telah normal.\n\nTerima kasih atas kesabaran, pengertian, dan kepercayaan Anda kepada Upaznet. 🤝" },
-  { title: "Gangguan upstream - Broadcast pelanggan", cat: "Upstream",
-    text: "Halo Sahabat Upaznet\n\nMohon maaf atas kendala yang sedang dialami. Berdasarkan pengecekan, saat ini terdapat gangguan MAIN link upstream kami.\nSaat ini tim kami sedang melakukan penanganan agar layanan dapat kembali normal secepat mungkin. 🙏🏻\n\nKami akan segera menginformasikan kembali setelah kondisi jaringan normal.\nMohon kesediaannya untuk menunggu, dan terima kasih atas pengertiannya🙏🏻🙏🏻" },
-  { title: "Estimasi gangguan upstream", cat: "Upstream",
-    text: "mohon maaf terkait estimasi waktunya masih belum bisa kami sampaikan,segera kami informasikan kembali jika internet sudah normal kembali🙏🏻🙏🏻" },
-
-  // --- Server
-  { title: "Gangguan server - Story WA", cat: "Server",
-    text: "📢 INFO GANGGUAN LAYANAN UPAZNET\n\nKami informasikan bahwa Saat ini sedang terjadi gangguan pada jaringan SERVER kami yang menyebabkan kendala pada layanan internet.\n\n🛠️ Kami  dan tim sedang melakukan penanganan secara intensif agar layanan dapat kembali normal secepat mungkin.\n\n🙏 Kami mohon maaf atas ketidaknyamanan yang ditimbulkan. Informasi terbaru akan kami sampaikan kembali setelah proses penanganan selesai dan kondisi jaringan telah normal.\n\nTerima kasih atas kesabaran, pengertian, dan kepercayaan Anda kepada Upaznet. 🤝" },
-  { title: "Gangguan kelistrikan server - Broadcast pelanggan", cat: "Server",
-    text: "Halo Sahabat Upaznet\n\nMohon maaf atas kendala yang sedang dialami. Berdasarkan pengecekan, saat ini terdapat gangguan kelistrikan pada server kami.\nsaat ini kami dan tim masih melakukan upaya untuk melakukan perbaikan secepat mungkin,🙏🙏\n\nKami akan segera menginformasikan kembali setelah kondisi jaringan normal.\nMohon kesediaannya untuk menunggu, dan terima kasih atas pengertiannya" },
-
-  // --- Jalur kabel (ODP / ODC / OLT)
-  { title: "Gangguan ODP / ODC / OLT down - Broadcast pelanggan", cat: "Jalur kabel",
-    text: "Halo Sahabat Upaznet\n\nKami informasikan bahwa saat ini layanan internet mengalami gangguan akibat adanya jalur distribusi yang terputus (cut).\nsaat ini kami dan tim masih melakukan upaya untuk melakukan perbaikan secepat mungkin,🙏🙏\n\nKami memohon maaf atas ketidaknyamanan yang dirasakan.\nakan segera kami informasikan kembali jika perbaikan sudah selesai dilakukan\n\nTerima kasih atas kesabaran dan pengertiannya.🙏🙏" },
-  { title: "Estimasi ODP down", cat: "Jalur kabel",
-    text: "Halo Sahabat Upaznet\n\nKami informasikan saat ini layanan internet di area kakak sedang mengalami gangguan akibat jalur distribusi yang terputus (cut)\nsaat ini kami dan tim masih melakukan upaya untuk melakukan perbaikan untuk estimasi perbaikan  maksimal 4 jam\n\nKami memohon maaf atas ketidaknyamanan yang dirasakan.\nakan segera kami informasikan kembali jika perbaikan sudah selesai dilakukan\n\nTerima kasih atas kesabaran dan pengertiannya.🙏🙏" },
-  { title: "Estimasi ODC down", cat: "Jalur kabel",
-    text: "Halo Sahabat Upaznet\n\nKami informasikan saat ini layanan internet di area kakak sedang mengalami gangguan akibat jalur distribusi yang terputus (cut)\nsaat ini kami dan tim masih melakukan upaya untuk melakukan perbaikan untuk estimasi perbaikan maksimal 6 jam\n\nKami memohon maaf atas ketidaknyamanan yang dirasakan.\nakan segera kami informasikan kembali jika perbaikan sudah selesai dilakukan\n\nTerima kasih atas kesabaran dan pengertiannya.🙏🙏" },
-
-  // --- Lainnya
-  { title: "Peak hour (jam sibuk)", cat: "Lainnya",
-    text: "Halo Sahabat Upaznet\n\nKami mohon maaf atas kendala koneksi yang Bapak/Ibu alami saat ini. Perlu kami informasikan bahwa saat ini sedang terjadi peningkatan penggunaan jaringan (peak hour), sehingga kecepatan internet dapat mengalami penurunan sementara.\n\nTim kami terus melakukan pemantauan dan optimasi agar layanan tetap stabil. Kami sarankan untuk mencoba kembali beberapa saat lagi.\n\nTerima kasih atas pengertian dan kesabarannya. 🙏🙏" },
-  { title: "Konfirmasi tiket preventive redaman tinggi", cat: "Lainnya",
-    text: "Halo Sahabat Upaznet\n\nkami mendeteksi bahwa kualitas jaringan internet kurang optimal. Demi memberikan pelayanan yang lebih baik,\nkami akan menjadwalkan kunjungan teknisi untuk melakukan perbaikan supaya koneksi internet menjadi lebih stabil.🙏🏻🙏🏻" },
-  { title: "Maintenance selesai", cat: "Lainnya",
-    text: "Halo Sahabat Upaznet\n\nKami informasikan kembali bahwa saat ini internet sudah bisa diakses dengan normal,\nSilahkan untuk dicoba kembali,jika masih terdapat kendala silahkan untuk menginformasikan kepada kami untuk kami lakukan pemeriksaan lebih lanjut,\n\nTerimakasih sudah sabar menunggu dan selamat melanjutkan aktivitas anda kembali.🙏🙏" }
-];
-
-// ---- Tab 3: Komplain Upstream
-const UPSTREAM = [
-  { title: "KOMPLAIN LINK ARAH KE OMADATA", cat: "FiberStar",
-    text: "Selamat pagi/siang/malam Rekan,\n\nMohon informasinya apakah saat ini sedang terjadi gangguan pada metro yang mengarah ke Omadata?\nKarena kami monitoring terpantau koneksi down\n\nID Pelanggan CRT2601018111-ICI-JAB-DIMENSI_JARINGAN_BERSINAR-OMDT-20Gbps\nPT DIMENSI JARINGAN BERSINAR" },
-  { title: "KOMPLAIN LINK ARAH KE POP BLJ MADIUN", cat: "FiberStar",
-    text: "Selamat pagi/siang/malam Rekan,\n\nMohon informasinya apakah saat ini sedang terjadi gangguan pada metro yang mengarah ke POP Madiun?\nKarena kami monitoring terpantau koneksi down\n\nID Pelanggan CRT2606019576-JAB-DIMENSI_JARINGAN_BERSINAR_MADIUN-CYB1-700Mbps\nPT DIMENSI JARINGAN BERSINAR" },
-  { title: "KOMPLAIN LINK CYBER JKT", cat: "FiberStar",
-    text: "Selamat pagi/siang/malam Rekan,\n\nMohon informasinya apakah saat ini sedang terjadi gangguan pada metro yang mengarah ke CYBER?\nKarena kami monitoring terpantau koneksi down\n\nID Pelanggan CRT2606016132-JAB-DIMENSI_JARINGAN_KENAYAN_TULUNGAGUNG_2-CYB1-3Gbps\nPT DIMENSI JARINGAN BERSINAR" },
-  { title: "KOMPLAIN DATACENTER OMADATA", cat: "OMADATA",
-    text: "Selamat pagi/siang/malam Rekan,\n\nMohon informasinya apakah saat ini sedang terjadi gangguan / maintenance di sisi OMADATA?\n\nTerpantau saat ini perangkat kami yang berada di MMR mengalami down" },
-  { title: "Eskalasi tiket belum ada respons", cat: "Follow up",
-    text: "Selamat [Pagi/Siang/Sore/Malam], NOC [Nama Upstream].\n\nTiket [Nomor Tiket Upstream] untuk layanan [ID Layanan] sudah berjalan [Durasi] tanpa pembaruan dan berdampak pada [Jumlah] pelanggan kami. Mohon dieskalasi ke tim terkait dan dikabari perkembangannya.\n\nTerima kasih.\n\n[Nama Agen] - Tim Helpdesk Upaznet" },
-  { title: "Konfirmasi layanan pulih", cat: "Penutupan",
-    text: "Selamat [Pagi/Siang/Sore/Malam], NOC [Nama Upstream].\n\nLayanan [ID Layanan] sudah kembali normal di sisi kami sejak pukul [Jam Pulih] WIB. Tiket [Nomor Tiket Upstream] dapat ditutup. Mohon kirimkan RFO (Reason for Outage) untuk gangguan ini.\n\nTerima kasih atas bantuannya.\n\n[Nama Agen] - Tim Helpdesk Upaznet" }
-];
-
-// ---- Tab: Rekening pembayaran per wilayah
-const REKENING = [
-  { title: "UHO", cat: "Rekening",
-    text: "Untuk pembayaran bisa melalui rekening berikut  :\n\nBCA : 3231143333 - PT DIMENSI JARINGAN BERSINAR" },
-  { title: "UNR", cat: "Rekening",
-    text: "Untuk pembayaran bisa melalui rekening berikut  :\n\nBCA : 0480858875 - ARDIAN MUSTOFA\nBRI : 659401018183534 - ARDIAN MUSTOFA\nBNI : 0194166724 - ARDIAN MUSTOFA\nMANDIRI : 1440013727448 - ARDIAN MUSTOFA" },
-  { title: "UNB", cat: "Rekening",
-    text: "Untuk pembayaran bisa melalui rekening berikut  :\n\nBRI : 011001012712535 - HANI MUFIDAH\nMANDIRI : 1440004027980 - SODIK\nBCA : 0481906465 an M. SYAMSU DHUHA" },
-  { title: "UGR", cat: "Rekening",
-    text: "Untuk pembayaran bisa melalui rekening berikut  :\n\n🏦 BCA a.n. ARDIAN MUSTOFA\n📌 No. Rekening: 3230927170\n\n🏦 BRI a.n. ARDIAN MUSTOFA\n📌 No. Rekening: 206501000878566" }
-];
-
-// ---- Daftar tab di halaman Template
-// kind: "agents" = template chat 2 kolom (nama + shift), "letter" = pesan resmi, "custom" = isi sendiri di HTML (panel-gpon, berisi aplikasi Config Generator)
-const TABS = [
-  { id: "chat", label: "Template Chat", kind: "agents", items: TEMPLATES,
-    desc: "Isi nama dan pilih shift di masing-masing kolom. Salam pembuka otomatis menyesuaikan dan ikut tersalin.",
-    hint: "Kolom kiri dan kanan dipakai bergantian oleh dua helpdesk dalam satu shift. Nama dan shift tersimpan di browser ini, jadi tidak hilang saat halaman dimuat ulang. Pesan lanjutan (Tanya trouble, Konfirmasi, dan Penutup) tidak memakai salam pembuka." },
-  { id: "broadcast", label: "Broadcast Gangguan", kind: "letter", items: BROADCAST,
-    desc: "Pengumuman ke pelanggan saat ada gangguan, estimasi perbaikan, atau pekerjaan selesai.",
-    hint: "Judul berakhiran \"Story WA\" dipakai untuk status WhatsApp, sedangkan \"Broadcast\" dikirim langsung ke pelanggan." },
-  { id: "upstream", label: "Komplain Upstream", kind: "letter", items: UPSTREAM,
-    desc: "Fiberstar grup wa After Sales FS x Dimensi Jaringan Bersinar ( Upaz Nett ) | OMADATA grup wa OMADATA - UPAZNET",
-    hint: "Lampirkan hasil ping, traceroute, atau tangkapan layar monitoring bila ada, supaya upstream bisa memeriksa lebih cepat." },
-  { id: "rekening", label: "Rekening", kind: "letter", items: REKENING,
-    desc: "Nomor rekening pembayaran sesuai wilayah pelanggan.",
-    hint: "Klik kartu wilayah yang sesuai untuk menyalin pesannya, lalu kirim ke pelanggan." },
-  { id: "gpon", label: "Config GPON", kind: "custom" }
-];
-
-/* =====================================================
-   Logika halaman
-   ===================================================== */
-const $ = (s) => document.querySelector(s);
-const tabState = {};
-let currentPage = null;
-
-function el(tag, cls, text) {
-  const n = document.createElement(tag);
-  if (cls) n.className = cls;
-  if (text != null) n.textContent = text;
-  return n;
-}
-
-/* ---------- Navigasi antarhalaman ---------- */
-function route() {
-  const h = location.hash;
-  const page = h.startsWith("#template") ? "template" : "sop";
-  $("#page-sop").hidden = page !== "sop";
-  $("#page-template").hidden = page !== "template";
-  document.querySelectorAll("[data-nav]").forEach((a) => {
-    if (a.dataset.nav === page) a.setAttribute("aria-current", "page");
-    else a.removeAttribute("aria-current");
-  });
-  let tabId = "chat";
-  if (page === "template") {
-    const wanted = h.split("/")[1];
-    if (TABS.some((t) => t.id === wanted)) tabId = wanted;
-    activateTab(tabId);
-  }
-  const tab = TABS.find((t) => t.id === tabId);
-  document.title = (page === "sop" ? "SOP" : tab.label) + " – Upaznet Helpdesk";
-  if (currentPage !== page) window.scrollTo(0, 0);
-  currentPage = page;
-}
-window.addEventListener("hashchange", route);
-
-/* ---------- Pamflet: perbesar ---------- */
-const viewer = $("#viewer");
-function openViewer(imgId) {
-  const src = document.getElementById(imgId);
-  $("#viewer-img").src = src.src;
-  $("#viewer-img").alt = src.alt;
-  if (typeof viewer.showModal === "function") viewer.showModal();
-  $("#viewer-box").scrollTop = 0;
-}
-document.querySelectorAll("[data-zoom]").forEach((btn) =>
-  btn.addEventListener("click", () => openViewer(btn.querySelector("img").id)));
-$("#viewer-close").addEventListener("click", () => viewer.close());
-$("#viewer-box").addEventListener("click", (e) => { if (e.target.id === "viewer-box") viewer.close(); });
-
-/* ---------- Template: tab ---------- */
-function hashFor(id) { return id === "chat" ? "#template" : "#template/" + id; }
-
-function activateTab(id) {
-  TABS.forEach((t) => {
-    const on = t.id === id;
-    const b = $("#tab-" + t.id);
-    b.setAttribute("aria-selected", String(on));
-    b.tabIndex = on ? 0 : -1;
-    $("#panel-" + t.id).hidden = !on;
-  });
-}
-
-/* ---------- Template Chat: 2 kolom (kiri-kanan), nama + shift per helpdesk ---------- */
-const SHIFTS = ["Pagi", "Siang", "Malam"];
-const AGENT_KEY = "upaznet-helpdesk-agents";
-
-function defaultShift() {
-  const h = new Date().getHours();
-  return h >= 5 && h < 11 ? "Pagi" : h >= 11 && h < 18 ? "Siang" : "Malam";
-}
-function loadAgents() {
-  let saved = [];
-  try { saved = JSON.parse(localStorage.getItem(AGENT_KEY)) || []; } catch (_) {}
-  return [0, 1].map((i) => {
-    const a = saved[i] || {};
-    return {
-      name: typeof a.name === "string" ? a.name : "",
-      shift: SHIFTS.includes(a.shift) ? a.shift : defaultShift()
-    };
-  });
-}
-const agents = loadAgents();
-function saveAgents() {
-  try { localStorage.setItem(AGENT_KEY, JSON.stringify(agents)); } catch (_) {}
-}
-
-function greeting(a) {
-  const name = a.name.trim() || "[Nama Helpdesk]";
-  return "Selamat " + a.shift + " Kak👋\nSaya " + name + " dari tim Helpdesk upaznet.";
-}
-function fullText(t, a) {
-  if (t.greet === false) return t.text;
-  return t.text ? greeting(a) + "\n\n" + t.text : greeting(a);
-}
-
-function buildAgents() {
-  const wrap = el("div", "agents");
-  agents.forEach((a, i) => {
-    const col = el("section", "agent");
-    col.setAttribute("aria-label", "Helpdesk " + (i + 1));
-
-    const bar = el("div", "agent-bar");
-    bar.appendChild(el("div", "agent-title", "Helpdesk " + (i + 1)));
-    const fields = el("div", "agent-fields");
-
-    const f1 = el("div", "field");
-    const l1 = el("label", null, "Nama helpdesk"); l1.htmlFor = "agent-name-" + i;
-    const input = el("input"); input.id = "agent-name-" + i;
-    input.type = "text"; input.placeholder = "Ketik nama"; input.autocomplete = "off";
-    input.maxLength = 40; input.value = a.name;
-    input.addEventListener("input", () => {
-      a.name = input.value; input.classList.remove("invalid");
-      saveAgents(); renderAgentList(i);
-    });
-    f1.append(l1, input);
-
-    const f2 = el("div", "field");
-    const l2 = el("label", null, "Shift"); l2.htmlFor = "agent-shift-" + i;
-    const sel = el("select"); sel.id = "agent-shift-" + i;
-    SHIFTS.forEach((sh) => { const o = el("option", null, sh); o.value = sh; sel.appendChild(o); });
-    sel.value = a.shift;
-    sel.addEventListener("change", () => { a.shift = sel.value; saveAgents(); renderAgentList(i); });
-    f2.append(l2, sel);
-
-    fields.append(f1, f2);
-    bar.appendChild(fields);
-    const list = el("div", "agent-list"); list.id = "agent-list-" + i;
-    col.append(bar, list);
-    wrap.appendChild(col);
-  });
-  return wrap;
-}
-
-function renderAgents() { agents.forEach((_, i) => renderAgentList(i)); }
-
-function renderAgentList(i) {
-  const tab = TABS.find((t) => t.kind === "agents");
-  const a = agents[i];
-  const list = $("#agent-list-" + i);
-  list.innerHTML = "";
-  const cat = tabState[tab.id].cat;
-
-  tab.items.filter((t) => cat === "Semua" || t.cat === cat).forEach((t) => {
-    const text = fullText(t, a);
-    const card = el("article", "tpl");
-    const head = el("div", "tpl-head");
-    head.append(el("h2", "tpl-title", t.title), el("span", "tpl-cat", t.cat));
-
-    const body = el("div", "bubble clickable");
-    body.setAttribute("role", "button");
-    body.tabIndex = 0;
-    body.setAttribute("aria-label", "Salin template: " + t.title);
-    fillBubble(body, text);
-
-    const state = el("div", "copy-state", "Klik teks untuk menyalin");
-    state.setAttribute("aria-live", "polite");
-
-    let timer;
-    const reset = () => {
-      body.classList.remove("copied");
-      state.textContent = "Klik teks untuk menyalin";
-      state.classList.remove("done", "err");
-    };
-    const doCopy = async () => {
-      // jika sedang menyeleksi sebagian teks, jangan timpa dengan salin semua
-      if (String(window.getSelection()).trim()) return;
-      clearTimeout(timer);
-      if (t.greet !== false && !a.name.trim()) {
-        // sesuai SOP: nama wajib dicantumkan
-        state.textContent = "Isi nama helpdesk dulu";
-        state.classList.add("err");
-        const input = $("#agent-name-" + i);
-        input.classList.add("invalid");
-        input.focus();
-        timer = setTimeout(reset, 2200);
-        return;
-      }
-      await copyText(text);
-      body.classList.add("copied");
-      state.textContent = "✓ Tersalin";
-      state.classList.remove("err"); state.classList.add("done");
-      timer = setTimeout(reset, 1800);
-    };
-    body.addEventListener("click", doCopy);
-    body.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); doCopy(); }
-    });
-
-    card.append(head, body, state);
-    list.appendChild(card);
-  });
-}
-
-function buildTabs() {
-  const list = $("#tabs");
-  const panels = $("#tab-panels");
-  TABS.forEach((tab, i) => {
-    tabState[tab.id] = { cat: "Semua" };
-
-    const b = el("button", "tab", tab.label);
-    b.type = "button"; b.id = "tab-" + tab.id;
-    b.setAttribute("role", "tab");
-    b.setAttribute("aria-controls", "panel-" + tab.id);
-    b.addEventListener("click", () => { location.hash = hashFor(tab.id); });
-    b.addEventListener("keydown", (e) => {
-      const last = TABS.length - 1;
-      const map = { ArrowRight: (i + 1) % TABS.length, ArrowLeft: (i + last) % TABS.length, Home: 0, End: last };
-      if (!(e.key in map)) return;
-      e.preventDefault();
-      const next = TABS[map[e.key]];
-      location.hash = hashFor(next.id);
-      $("#tab-" + next.id).focus();
-    });
-    list.appendChild(b);
-
-    if (tab.kind === "custom") return; // panelnya sudah ada di HTML
-
-    const p = el("div", "tabpanel");
-    p.id = "panel-" + tab.id;
-    p.setAttribute("role", "tabpanel");
-    p.setAttribute("aria-labelledby", "tab-" + tab.id);
-    p.hidden = true;
-
-    p.appendChild(el("p", "tab-desc", tab.desc));
-
-    const chips = el("div", "chips"); chips.id = "chips-" + tab.id;
-    chips.setAttribute("role", "group"); chips.setAttribute("aria-label", "Filter kategori");
-    chips.style.marginBottom = "20px";
-
-    let grid;
-    if (tab.kind === "agents") {
-      grid = buildAgents();
-    } else {
-      grid = el("div", "tpl-grid"); grid.id = "grid-" + tab.id;
-    }
-    p.append(chips, grid, el("p", "hint", tab.hint));
-    panels.appendChild(p);
-
-    buildChips(tab);
-    renderTab(tab);
-  });
-}
-
-function buildChips(tab) {
-  const container = $("#chips-" + tab.id);
-  const cats = ["Semua", ...new Set(tab.items.map((i) => i.cat))];
-  container.innerHTML = "";
-  container.hidden = cats.length <= 2; // satu kategori saja, filter tidak diperlukan
-  if (container.hidden) return;
-  cats.forEach((c) => {
-    const b = el("button", "chip", c);
-    b.type = "button";
-    b.setAttribute("aria-pressed", String(tabState[tab.id].cat === c));
-    b.addEventListener("click", () => { tabState[tab.id].cat = c; buildChips(tab); renderTab(tab); });
-    container.appendChild(b);
-  });
-}
-
-function fillBubble(node, text) {
-  text.split(/(\[[^\]]+\])/g).forEach((part) => {
-    if (/^\[[^\]]+\]$/.test(part)) node.appendChild(el("span", "ph", part));
-    else if (part) node.appendChild(document.createTextNode(part));
-  });
-}
-
-async function copyText(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch (e) {
-    const ta = document.createElement("textarea");
-    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
-    document.body.appendChild(ta); ta.select();
-    try { document.execCommand("copy"); } catch (_) {}
-    ta.remove();
-  }
-}
-
-function renderTab(tab) {
-  if (tab.kind === "agents") { renderAgents(); return; }
-  const grid = $("#grid-" + tab.id);
-  grid.innerHTML = "";
-  const st = tabState[tab.id];
-  const rows = tab.items.filter((t) => st.cat === "Semua" || t.cat === st.cat);
-
-  rows.forEach((t) => {
-    const card = el("article", "tpl");
-    const head = el("div", "tpl-head");
-    head.append(el("h2", "tpl-title", t.title), el("span", "tpl-cat", t.cat));
-
-    const body = el("div", "bubble clickable" + (tab.kind === "letter" ? " letter" : ""));
-    body.setAttribute("role", "button");
-    body.tabIndex = 0;
-    body.setAttribute("aria-label", "Salin template: " + t.title);
-    fillBubble(body, t.text);
-
-    const state = el("div", "copy-state", "Klik teks untuk menyalin");
-    state.setAttribute("aria-live", "polite");
-
-    let timer;
-    const doCopy = async () => {
-      // jika pengguna sedang menyeleksi sebagian teks, jangan timpa dengan salin semua
-      if (String(window.getSelection()).trim()) return;
-      await copyText(t.text);
-      body.classList.add("copied");
-      state.textContent = "✓ Tersalin";
-      state.classList.add("done");
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        body.classList.remove("copied");
-        state.textContent = "Klik teks untuk menyalin";
-        state.classList.remove("done");
-      }, 1800);
-    };
-    body.addEventListener("click", doCopy);
-    body.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); doCopy(); }
-    });
-
-    card.append(head, body, state);
-    grid.appendChild(card);
-  });
-}
-
-/* ---------- Inisialisasi ---------- */
-buildTabs();
-route();
-</script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
