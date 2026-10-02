@@ -63,7 +63,7 @@ section[hidden] { display: none; }
   border-radius: var(--radius); padding: 16px; margin-bottom: 20px;
 }
 .row { display: flex; gap: 10px; flex-wrap: wrap; }
-.field { display: flex; flex-direction: column; gap: 4px; flex: 1 1 200px; }
+.field { display: flex; flex-direction: column; gap: 4px; flex: 1 1 400px; }
 .field.small { flex: 0 0 170px; }
 label { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
 input[type="text"], input[type="date"], textarea {
